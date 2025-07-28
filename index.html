@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>IMEDILAB | Cotiza y agenda en línea</title>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root{
+  --primary:#ff6600;
+  --secondary:#0d47a1;
+  --dark:#0e1e40;
+  --text:#222;
+  --muted:#666;
+  --bg:#f7f9fc;
+  --radius:14px;
+  --shadow:0 8px 24px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,sans-serif;color:var(--text);background:var(--bg);scroll-behavior:smooth;}
+h1,h2,h3{line-height:1.2;margin:0 0 .75rem 0;}
+p{margin:.25rem 0 1rem;}
+small{color:var(--muted);}
+.section{padding:90px 0;}
+.section-title{text-align:center;color:var(--secondary);font-size:2.15rem;margin-bottom:1rem;}
+.section-subtitle{text-align:center;color:var(--muted);max-width:900px;margin:0 auto 2.25rem auto;}
+.container{max-width:1200px;margin:0 auto;padding:0 1rem;}
+/* Navbar */
+.navbar{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid #e8eef7;box-shadow:0 1px 4px rgba(0,0,0,.03);}
+.navbar .container{display:flex;align-items:center;justify-content:space-between;padding:.85rem 0;}
+.brand{display:flex;align-items:center;gap:.5rem;font-weight:800;color:var(--secondary);font-size:1.15rem;}
+.brand span{color:var(--primary);}
+.nav-links{list-style:none;display:flex;gap:1rem;margin:0;padding:0;align-items:center;}
+.nav-links a{color:var(--secondary);text-decoration:none;font-weight:500;padding:.35rem .65rem;border-radius:8px;}
+.nav-links a:hover{background:rgba(13,71,161,.06);}
+.cta-nav{background:var(--primary) !important;color:#fff !important;font-weight:600;}
+/* Hero */
+.hero{min-height:72vh;display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;background:linear-gradient(135deg,rgba(13,71,161,.92),rgba(13,71,161,.92)),url('https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;}
+.hero .inner{max-width:860px;padding:2rem;background:rgba(255,255,255,.03);border-radius:var(--radius);box-shadow:0 2px 14px rgba(0,0,0,.05);backdrop-filter: blur(2px);}
+.hero h1{font-size:2.4rem;margin-bottom:1rem;}
+.hero p{font-size:1.1rem;opacity:.95;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;padding:.85rem 1.35rem;border-radius:10px;border:none;cursor:pointer;font-weight:600;text-decoration:none;}
+.btn-primary{background:var(--primary);color:#fff;}
+.btn-outline{background:transparent;color:#fff;border:2px solid #fff;}
+.btn:disabled{opacity:.5;cursor:not-allowed;}
+/* Grid cards */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;}
+.card{background:#fff;border-radius:var(--radius);padding:1.35rem;box-shadow:var(--shadow);}
+.card i{font-size:1.8rem;color:var(--primary);margin-bottom:.35rem;}
+.card h3{color:var(--secondary);margin-bottom:.35rem;}
+/* Cotizador */
+.cotizador{background:#fff;border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);max-width:980px;margin:0 auto;}
+.cotizador .filters{display:flex;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;}
+.search{flex:1;min-width:240px;position:relative;}
+.search input{width:100%;padding:.65rem .9rem;border:1px solid #e2e8f0;border-radius:10px;font:inherit;}
+.badge{display:inline-block;background:rgba(13,71,161,.06);color:var(--secondary);padding:.25rem .6rem;border-radius:9999px;font-size:.85rem;margin:0 .25rem .25rem 0;cursor:pointer;}
+.table{width:100%;border-collapse:collapse;margin-top:1rem;}
+.table th,.table td{text-align:left;padding:.65rem;border-bottom:1px solid #f0f3f8;font-size:.95rem;}
+.table th{color:var(--secondary);}
+.table tbody tr:hover{background:#f9fbff;}
+.qty{width:70px;padding:.3rem .5rem;border:1px solid #e2e8f0;border-radius:6px;}
+.total-box{display:flex;flex-direction:column;align-items:flex-end;margin-top:1rem;gap:.35rem;}
+.total-line{font-size:1.1rem;}
+.total-amount{font-size:1.55rem;font-weight:700;color:var(--secondary);}
+.note{color:#b35300;font-size:.9rem;text-align:center;margin:.5rem 0 1rem;}
+/* Agenda */
+.form{background:#fff;border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);max-width:780px;margin:0 auto;}
+.field{margin-bottom:1rem;}
+label{display:block;font-weight:600;margin-bottom:.35rem;}
+input,select,textarea{width:100%;padding:.65rem .9rem;border:1px solid #e2e8f0;border-radius:10px;font:inherit;}
+textarea{min-height:120px;resize:vertical;}
+/* Loyalty */
+.banner{background:#fff;border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow);max-width:980px;margin:0 auto;}
+.banner strong{color:var(--secondary);}
+/* Footer */
+footer{padding:1.25rem 0;background:#0d47a1;color:#fff;text-align:center;font-size:.9rem;}
+/* Pills */
+.pills{display:flex;gap:.5rem;flex-wrap:wrap;margin:.25rem 0 .75rem;}
+.pill{background:#f0f3f8;color:#0e1e40;border-radius:999px;padding:.2rem .6rem;font-size:.8rem;}
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:#0d47a1;color:#fff;padding:.75rem 1rem;border-radius:8px;box-shadow:0 4px 14px rgba(0,0,0,.1);opacity:0;transform:translateY(10px);transition:.25s;}
+.toast.show{opacity:1;transform:translateY(0);}
+/* Responsive nav (simple) */
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .menu-toggle{display:inline-flex;cursor:pointer;font-size:1.4rem;color:var(--secondary);}
+  .nav-open .nav-links{display:flex;flex-direction:column;position:absolute;top:64px;left:0;right:0;background:#fff;padding:1rem;border-bottom:1px solid #eee;}
+}
+</style>
+</head>
+<body>
+<header class="navbar">
+  <div class="container">
+    <div class="brand"><img src="assets/logo_imedilab.png" alt="IMEDILAB" style="height:42px;"></div>
+    <div class="menu-toggle" id="menuToggle"><i class="fa-solid fa-bars"></i></div>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#estudios">Estudios</a></li>
+      <li><a href="#cotiza" class="cta-nav">Cotiza</a></li>
+      <li><a href="#agenda">Agenda</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+      <li><a href="#usuario">Mi usuario</a></li>
+    </ul>
+  </div>
+</header>
+
+<section id="inicio" class="hero">
+  <div class="inner">
+    <h1>Tu salud, nuestra prioridad</h1>
+    <p>Autocotízate, agenda y acumula puntos. Servicios de salud diagnóstica en Yucatán.</p>
+    <div style="display:flex;justify-content:center;gap:.8rem;flex-wrap:wrap;margin-top:1rem;">
+      <a href="#cotiza" class="btn btn-primary"><i class="fa-solid fa-calculator"></i> Cotizar ahora</a>
+      <a href="#agenda" class="btn btn-outline">Agendar cita</a>
+    
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#agenda" class="btn btn-primary"><i class="fa-solid fa-building"></i> Soy empresa, quiero una cotización</a>
+    </div>
+  </div>
+</section>
+
+
+
+<section id="empresas" class="section" style="padding:60px 0 30px;background:#fff;">
+  <div class="container">
+    <h2 class="section-title" style="margin-bottom:1rem;">Confían en nosotros</h2>
+    <p class="section-subtitle" style="margin-bottom:2.5rem;">
+      Somos uno de los principales proveedores de salud diagnóstica de las empresas líderes en Yucatán.
+    </p>
+    <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:2rem;align-items:center;justify-items:center;">
+      <img src="https://logo.clearbit.com/femsa.com" alt="FEMSA" style="max-height:60px;">
+      <img src="https://logo.clearbit.com/oxxo.com" alt="OXXO" style="max-height:60px;">
+      <img src="https://logo.clearbit.com/keken.com.mx" alt="Kekén" style="max-height:60px;">
+      <img src="https://logo.clearbit.com/crio.com.mx" alt="Crío" style="max-height:60px;">
+      <img src="https://logo.clearbit.com/bachoco.com.mx" alt="Bachoco" style="max-height:60px;">
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#agenda" class="btn btn-primary"><i class="fa-solid fa-building"></i> Soy empresa, quiero una cotización</a>
+    </div>
+  </div>
+</section>
+
+
+<section id="estudios" class="section">
+  <div class="container">
+    <h2 class="section-title">Nuestros servicios</h2>
+    <p class="section-subtitle">Amigable, rápido y con precios estimados en línea. Para análisis clínicos recomendamos confirmar por WhatsApp.</p>
+
+    <div class="grid">
+      <div class="card"><i class="fa-solid fa-vial"></i><h3>Laboratorio clínico</h3><p>Más de 5,000 estudios certificados.</p><span class="pill">WhatsApp para cotizar exacto</span></div>
+      <div class="card"><i class="fa-solid fa-x-ray"></i><h3>Rayos X</h3><p>Imágenes diagnósticas con radiólogos certificados.</p></div>
+      <div class="card"><i class="fa-solid fa-wave-square"></i><h3>Ultrasonido</h3><p>Por especialidad.</p></div>
+      <div class="card"><i class="fa-solid fa-heart-pulse"></i><h3>Electrocardiograma</h3><p>Reporte médico.</p></div>
+      <div class="card"><i class="fa-solid fa-lungs"></i><h3>Espirometría</h3><p>Función pulmonar.</p></div>
+      <div class="card"><i class="fa-solid fa-ear-listen"></i><h3>Audiometría</h3><p>Prueba de audición.</p></div>
+      <div class="card"><i class="fa-solid fa-eye"></i><h3>Oftalmología</h3><p>Consulta y estudios.</p></div>
+      <div class="card"><i class="fa-solid fa-brain"></i><h3>Psicología clínica</h3><p>Evaluación y terapia.</p></div>
+      <div class="card"><i class="fa-solid fa-briefcase-medical"></i><h3>Psicología laboral</h3><p>Pruebas y reportes para empresas.</p></div>
+      <div class="card"><i class="fa-solid fa-file-medical"></i><h3>Certificados médicos</h3><p>Para trámites y empleos.</p></div>
+      <div class="card"><i class="fa-solid fa-tooth"></i><h3>Odontología</h3><p>Agenda en línea <strong>solo limpiezas</strong>. Tratamientos por WhatsApp.</p></div>
+      <div class="card"><i class="fa-solid fa-building"></i><h3>Servicio a empresas</h3><p>Programas de salud ocupacional y campañas.</p></div>
+    
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#agenda" class="btn btn-primary"><i class="fa-solid fa-building"></i> Soy empresa, quiero una cotización</a>
+    </div>
+  </div>
+</section>
+
+<section id="mv" class="section">
+  <div class="container">
+    <h2 class="section-title">Misión, Visión y Valores</h2>
+    <div class="grid" style="gap:2rem;">
+      <div class="card">
+        <h3>Misión</h3>
+        <p>Ofrecer servicios de diagnóstico clínico con los más altos estándares de calidad, profesionalismo y calidez; contribuyendo al bienestar de cada paciente y generando confianza en cada resultado, a través de un equipo comprometido, capacitado y ético.</p>
+      </div>
+      <div class="card">
+        <h3>Visión</h3>
+        <p>Ser una institución de salud reconocida en Yucatán por su excelencia clínica, ética profesional y compromiso humano, donde el talento y la calidad de nuestros servicios transformen la experiencia de laboratorio en una atención integral, confiable y cercana.</p>
+      </div>
+      <div class="card">
+        <h3>Valores</h3>
+        <ul style="padding-left:1.2rem;line-height:1.6;">
+          <li><strong>Excelencia:</strong> nos esforzamos por hacer las cosas bien desde la primera vez.</li>
+          <li><strong>Humanidad:</strong> tratamos a cada persona con respeto, empatía y cercanía.</li>
+          <li><strong>Integridad:</strong> actuamos con honestidad, ética y transparencia.</li>
+          <li><strong>Compromiso:</strong> orientamos nuestras acciones al bienestar de los pacientes y la mejora continua.</li>
+          <li><strong>Innovación:</strong> mejoramos constantemente con tecnología y conocimiento.</li>
+          <li><strong>Trabajo en equipo:</strong> colaboración, respeto mutuo y mejora continua.</li>
+          <li><strong>Orgullo institucional:</strong> impactamos de forma real en la vida de las personas.</li>
+        </ul>
+      </div>
+    
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#agenda" class="btn btn-primary"><i class="fa-solid fa-building"></i> Soy empresa, quiero una cotización</a>
+    </div>
+  </div>
+</section>
+
+
+<section id="cotiza" class="section" style="background:linear-gradient(rgba(255,255,255,0.92),rgba(255,255,255,0.92)),url('assets/bg_cotiza.jpg') center/cover no-repeat;">
+  <div class="container">
+    <h2 class="section-title">Solicita tu cotización</h2>
+    <p class="section-subtitle">Selecciona el servicio que necesitas. Serás redirigido a WhatsApp donde te atenderemos directamente.</p>
+
+    <form onsubmit="sendWhatsAppQuote(); return false;" class="form" style="max-width:600px;margin:0 auto;">
+      <div class="field">
+        <label for="servicio">¿Qué servicio necesitas cotizar?</label>
+        
+<select id="servicio" name="servicio" required>
+  <option value="" selected disabled>Selecciona un servicio</option>
+  <option>Laboratorio clínico</option>
+  <option>Rayos X</option>
+  <option>Ultrasonido</option>
+  <option>Electrocardiograma</option>
+  <option>Espirometría</option>
+  <option>Audiometría</option>
+  <option>Oftalmología</option>
+  <option>Psicología clínica</option>
+  <option>Psicología laboral</option>
+  <option>Certificado médico</option>
+  <option>Odontología (limpieza)</option>
+  <option>Servicio a empresas</option>
+  <option>Otro (especificar en comentarios)</option>
+</select>
+
+      </div>
+      <div class="field">
+        <label for="comentarios">Comentarios adicionales (opcional)</label>
+        <textarea id="comentarios" placeholder="Ej: estudios específicos, dudas, empresa, etc."></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary"><i class="fa-brands fa-whatsapp"></i> Solicitar cotización por WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+<script>
+function sendWhatsAppQuote() {
+  const servicio = document.getElementById("servicio").value;
+  const comentarios = document.getElementById("comentarios").value.trim();
+  const msg = `Buen día, quisiera solicitar una cotización.
+
+Servicio: ${servicio}
+${comentarios ? "Comentarios: " + comentarios : ""}`;
+  const url = "https://wa.me/529993185571?text=" + encodeURIComponent(msg);
+  window.open(url, "_blank");
+}
+</script>
+<section id="agenda" class="section" style="background:linear-gradient(rgba(255,255,255,0.9),rgba(255,255,255,0.9)),url('assets/bg_agenda.jpg') center/cover no-repeat;">
+  <div class="container">
+    <h2 class="section-title">Agenda tu cita</h2>
+    <p class="section-subtitle">Completa tus datos, confirma la política de precios estimados y envíanos tu solicitud por WhatsApp.</p>
+
+    <form id="formAgenda" class="form">
+      <div class="field">
+        <label for="nombre">Nombre completo</label>
+        <input id="nombre" name="nombre" type="text" required>
+      </div>
+      <div class="field">
+        <label for="telefono">Teléfono</label>
+        <input id="telefono" name="telefono" type="tel" required>
+      </div>
+      <div class="field">
+        <label for="email">Correo electrónico (para envío de resultados)</label>
+        <input id="email" name="email" type="email" required>
+      </div>
+      <div class="field">
+        <label for="servicio">Servicio</label>
+        
+<select id="servicio" name="servicio" required>
+  <option value="" selected disabled>Selecciona un servicio</option>
+  <option>Laboratorio clínico</option>
+  <option>Rayos X</option>
+  <option>Ultrasonido</option>
+  <option>Electrocardiograma</option>
+  <option>Espirometría</option>
+  <option>Audiometría</option>
+  <option>Oftalmología</option>
+  <option>Psicología clínica</option>
+  <option>Psicología laboral</option>
+  <option>Certificado médico</option>
+  <option>Odontología (limpieza)</option>
+  <option>Servicio a empresas</option>
+  <option>Otro (especificar en comentarios)</option>
+</select>
+
+      </div>
+      <div class="field">
+        <label for="fecha">Fecha</label>
+        <input id="fecha" name="fecha" type="date" required>
+      </div>
+      <div class="field">
+        <label for="hora">Hora</label>
+        <input id="hora" name="hora" type="time" required>
+      </div>
+      <div class="field">
+        <label for="comentarios">Comentarios adicionales (opcional)</label>
+        <textarea id="comentarios" name="comentarios" placeholder="Ej: Alergias, condiciones, estudios previos..."></textarea>
+      </div>
+      <label style="display:flex;align-items:center;gap:.4rem;font-size:.9rem;cursor:pointer;margin:.5rem 0 1rem;">
+        <input type="checkbox" id="acepta" required> Acepto que los precios mostrados en línea son estimados y pueden variar.
+      </label>
+
+      <button type="submit" class="btn btn-primary"><i class="fa-brands fa-whatsapp"></i> Enviar solicitud por WhatsApp</button>
+    </form>
+  </div>
+</section>
+
+
+
+<section id="contacto" class="section">
+  <div class="container">
+    <h2 class="section-title">Contacto</h2>
+    <ul class="contact-info" style="list-style:none;padding:0;max-width:780px;margin:0 auto 1rem auto;">
+      <li><strong>Dirección:</strong> Dirección fiscal Polígono 108, Itzimná – MATRIZ</li>
+      <li><strong>Teléfono:</strong> 999 318 5571</li>
+      <li><strong>Correo:</strong> imediatención@icloud.com</li>
+      <li><strong>WhatsApp:</strong> +52 999 318 5571</li>
+      <li><strong>Sucursales:</strong> 5 en Mérida y el sureste de Yucatán</li>
+    </ul>
+    <div style="text-align:center;">
+      <a href="https://instagram.com/imedilabmid" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+      <a href="#" aria-label="Facebook" style="margin:0 .75rem;"><i class="fab fa-facebook"></i></a>
+      <a href="https://wa.me/529993185571" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    
+    </div>
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="#agenda" class="btn btn-primary"><i class="fa-solid fa-building"></i> Soy empresa, quiero una cotización</a>
+    </div>
+  </div>
+</section>
+
+
+<section id="comunidad" class="section" style="background:#f5faff;">
+  <div class="container">
+    <h2 class="section-title">Apoyamos a nuestra comunidad</h2>
+    <p class="section-subtitle">En IMEDILAB estamos comprometidos con el bienestar de nuestra comunidad. Realizamos campañas gratuitas de salud para personas en situación vulnerable, y colaboramos con instituciones educativas y organizaciones civiles.</p>
+    <div style="text-align:center;margin-top:2rem;">
+      <a href="https://wa.me/529993185571?text=Hola,%20quisiera%20conocer%20más%20sobre%20las%20campañas%20gratuitas%20de%20salud%20de%20IMEDILAB." class="btn btn-outline"><i class="fa-brands fa-whatsapp"></i> Quiero sumarme o conocer más</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  © 2025 IMEDILAB • Todos los derechos reservados.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ====== CONFIG ====== */
+const WA_NUMBER = "529993185571";
+
+// Catálogo de servicios con precios estimados (puedes ajustar libremente)
+const SERVICES = [
+  { id: "lab_general", name:"Laboratorio clínico (perfil básico)", price:350 },
+  { id: "lab_checkup", name:"Laboratorio check-up completo", price:1200 },
+  { id: "rayosx_torax", name:"Rayos X de tórax", price:600 },
+  { id: "rx_extremidad", name:"Rayos X extremidad", price:550 },
+  { id: "usg_abdominal", name:"Ultrasonido abdominal", price:900 },
+  { id: "usg_obstetrico", name:"Ultrasonido obstétrico", price:950 },
+  { id: "ekg", name:"Electrocardiograma", price:450 },
+  { id: "espirometria", name:"Espirometría", price:650 },
+  { id: "audiometria", name:"Audiometría", price:550 },
+  { id: "oftalmologia", name:"Consulta Oftalmología", price:500 },
+  { id: "psico_clinica", name:"Psicología clínica (sesión)", price:700 },
+  { id: "psico_laboral", name:"Psicología laboral (batería)", price:850 },
+  { id: "certificado", name:"Certificado médico", price:400 },
+  { id: "odont_limpieza", name:"Odontología - Limpieza dental", price:500 },
+  { id: "empresas", name:"Servicio a empresas (cotización por WhatsApp)", price:0 },
+];
+
+/* ====== Helpers ====== */
+const $ = sel => document.querySelector(sel);
+function showToast(text){
+  const t = $("#toast");
+  t.textContent = text;
+  t.classList.add("show");
+  setTimeout(()=>t.classList.remove("show"), 2800);
+}
+function format(n){ return n.toLocaleString("es-MX"); }
+function calcPoints(total){
+  // 10 puntos por $100 => total/100 *10
+  const points = Math.floor(total / 100 * 10);
+  const value = points * 5/10; // 10 puntos = $5 => 1 punto = $0.5
+  return { points, value };
+}
+
+/* ====== Responsive nav ====== */
+const menuToggle = $("#menuToggle");
+const navLinks = $("#navLinks");
+menuToggle?.addEventListener("click", ()=>{
+  document.body.classList.toggle("nav-open");
+});
+
+/* ====== Cotizador ====== */
+const selected = new Map();
+const searchInput = $("#searchInput");
+const results = $("#results");
+const selectedTable = $("#selectedTable");
+const tbody = selectedTable.querySelector("tbody");
+const subtotalEl = $("#subtotal");
+const commissionEl = $("#commission");
+const commissionLine = $("#commissionLine");
+const totalEl = $("#total");
+const btnWAquote = $("#btnWAquote");
+const btnClear = $("#btnClear");
+const applyCommission = $("#applyCommission");
+const pointsInfo = $("#pointsInfo");
+
+function renderSearchList(list){
+  if (!list.length){
+    results.innerHTML = "<small>No se encontraron resultados.</small>";
+    return;
+  }
+  const html = list.map(s => `
+    <span class="badge" data-id="${s.id}">${s.name} ${s.price ? " - $" + format(s.price) : ""}</span>
+  `).join("");
+  results.innerHTML = html;
+  results.querySelectorAll(".badge").forEach(b => {
+    b.addEventListener("click", ()=>{
+      const id = b.dataset.id;
+      const service = SERVICES.find(x => x.id === id);
+      if(!service) return;
+      if(!selected.has(id)){
+        selected.set(id, {...service, qty:1});
+      } else {
+        selected.get(id).qty += 1;
+      }
+      updateSelectedTable();
+    });
+  });
+}
+
+function updateSelectedTable(){
+  const items = Array.from(selected.values());
+  tbody.innerHTML = "";
+  if (!items.length){
+    selectedTable.style.display = "none";
+    subtotalEl.textContent = "0";
+    commissionEl.textContent = "0";
+    totalEl.textContent = "0";
+    pointsInfo.textContent = "";
+    btnWAquote.disabled = true;
+    return;
+  }
+  selectedTable.style.display = "table";
+  let subtotal = 0;
+  items.forEach(item => {
+    const base = item.price || 0;
+    const sub = base * item.qty;
+    subtotal += sub;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.name}</td>
+      <td>$${format(base)}</td>
+      <td><input type="number" class="qty" value="${item.qty}" min="1" data-id="${item.id}"></td>
+      <td>$${format(sub)}</td>
+      <td><button class="btn" style="background:#fee2e2;color:#b91c1c;border-radius:6px;padding:.25rem .6rem;" data-del="${item.id}"><i class="fa-solid fa-trash"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const commission = applyCommission.checked ? subtotal * 0.10 : 0;
+  const total = subtotal + commission;
+
+  subtotalEl.textContent = format(subtotal);
+  commissionEl.textContent = format(commission);
+  totalEl.textContent = format(total);
+
+  const {points, value} = calcPoints(total);
+  pointsInfo.textContent = `Ganarías aproximadamente ${points} puntos (valor $${format(value)} MXN) para tu próxima compra.`;
+
+  commissionLine.style.display = applyCommission.checked ? "block" : "none";
+  btnWAquote.disabled = false;
+
+  // Listeners
+  tbody.querySelectorAll(".qty").forEach(inp => {
+    inp.addEventListener("input", e => {
+      const id = e.target.dataset.id;
+      const val = Math.max(1, parseInt(e.target.value || "1", 10));
+      selected.get(id).qty = val;
+      updateSelectedTable();
+    });
+  });
+  tbody.querySelectorAll("button[data-del]").forEach(btn => {
+    btn.addEventListener("click", e => {
+      const id = e.currentTarget.dataset.del;
+      selected.delete(id);
+      updateSelectedTable();
+    });
+  });
+
+  btnWAquote.onclick = () => {
+    const lines = items.map(i => `• ${i.name} x${i.qty} = $${format((i.price||0)*i.qty)}`);
+    const msg = `Hola, me gustaría una cotización estimada para:\n\n${lines.join("\n")}\n\nSubtotal: $${format(subtotal)}\n${applyCommission.checked ? "Comisión 10%: $" + format(commission) + "\n" : ""}Total estimado: $${format(total)}\n\n*Sé que los precios son estimados y pueden variar.*`;
+    window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, "_blank");
+  };
+}
+
+btnClear.addEventListener("click", ()=>{
+  selected.clear();
+  updateSelectedTable();
+});
+
+applyCommission.addEventListener("change", updateSelectedTable);
+
+searchInput.addEventListener("input", ()=>{
+  const q = searchInput.value.toLowerCase().trim();
+  const list = SERVICES.filter(s => s.name.toLowerCase().includes(q));
+  renderSearchList(list);
+});
+
+// Primera render
+renderSearchList(SERVICES);
+
+/* ====== Agenda ====== */
+// Llenar select con servicios
+const sel = $("#servicio");
+SERVICES.forEach(s => {
+  const opt = document.createElement("option");
+  opt.value = s.name;
+  opt.textContent = s.name;
+  sel.appendChild(opt);
+});
+
+$("#formAgenda").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const nombre = $("#nombre").value.trim();
+  const tel = $("#telefono").value.trim();
+  const correo = $("#email").value.trim();
+  const servicio = $("#servicio").value;
+  const fecha = $("#fecha").value;
+  const hora = $("#hora").value;
+  const comentarios = $("#comentarios").value.trim();
+  const acepta = $("#acepta").checked;
+
+  if(!acepta){
+    showToast("Debes aceptar la política de precios estimados.");
+    return;
+  }
+
+  const msg = `Hola, quiero agendar una cita:\n\nNombre: ${nombre}\nTeléfono: ${tel}\nCorreo: ${correo}\nServicio: ${servicio}\nFecha: ${fecha}\nHora: ${hora}\nComentarios: ${comentarios || "N/A"}\n\n*Confirmo que los precios en línea son estimados y pueden variar.*`;
+  const url = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`;
+  window.open(url, "_blank");
+});
+
+/* ====== Crear usuario (localStorage) ====== */
+$("#btnCreateUser").addEventListener("click", ()=>{
+  const email = $("#usrEmail").value.trim();
+  const name = $("#usrName").value.trim();
+  if(!email || !name){
+    showToast("Completa correo y nombre para crear tu usuario.");
+    return;
+  }
+  const user = { email, name, createdAt: new Date().toISOString() };
+  localStorage.setItem("imedilab_user", JSON.stringify(user));
+  $("#userSaved").style.display = "inline-block";
+  showToast("Usuario guardado localmente.");
+});
+
+// Autocompletar si ya existe
+const saved = localStorage.getItem("imedilab_user");
+if(saved){
+  try{
+    const u = JSON.parse(saved);
+    $("#usrEmail").value = u.email || "";
+    $("#usrName").value = u.name || "";
+  }catch(e){}
+}
+</script>
+
+<script>
+document.getElementById("formUsuario")?.addEventListener("submit", function(e){
+  e.preventDefault();
+  const nombre = document.getElementById("nombreUsuario").value.trim();
+  const correo = document.getElementById("correoUsuario").value.trim();
+  if(nombre && correo){
+    localStorage.setItem("imedilab_user", JSON.stringify({nombre, correo, fecha: new Date().toISOString()}));
+    document.getElementById("msgUsuario").style.display = "block";
+  }
+});
+</script>
+
+
+<script>
+document.getElementById("formUsuario")?.addEventListener("submit", function(e){
+  e.preventDefault();
+  const nombre = document.getElementById("nombreUsuario").value.trim();
+  const correo = document.getElementById("correoUsuario").value.trim();
+  if(nombre && correo){
+    localStorage.setItem("imedilab_user", JSON.stringify({nombre, correo, fecha: new Date().toISOString()}));
+    document.getElementById("msgUsuario").style.display = "block";
+  }
+});
+</script>
+
+</body>
+</html>
